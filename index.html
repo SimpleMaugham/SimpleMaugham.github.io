@@ -1,0 +1,1206 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>马年红包扫雷 - 新春快乐</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=ZCOOL+KuaiLe&display=swap');
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --gold: #d4af37;
+      --red-dark: #8b0000;
+      --red-bright: #dc143c;
+      --firework-gold: #ffd700;
+    }
+    
+    body {
+      font-family: 'ZCOOL KuaiLe', 'Ma Shan Zheng', cursive, sans-serif;
+      min-height: 100vh;
+      background: 
+        radial-gradient(ellipse at 50% 0%, rgba(139,0,0,0.4) 0%, transparent 50%),
+        radial-gradient(ellipse at 30% 80%, rgba(220,20,60,0.2) 0%, transparent 40%),
+        linear-gradient(180deg, #0a0a1a 0%, #1a0a0a 30%, #0d0d1a 100%);
+      color: #fff;
+      overflow-x: hidden;
+      position: relative;
+    }
+    
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: 
+        radial-gradient(2px 2px at 20px 30px, rgba(255,215,0,0.3), transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.2), transparent),
+        radial-gradient(2px 2px at 50px 160px, rgba(255,200,0,0.2), transparent);
+      background-size: 200px 200px;
+      pointer-events: none;
+      z-index: 0;
+      animation: twinkle 3s ease-in-out infinite;
+    }
+    
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+    
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px;
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+    }
+    
+    /* 管理员面板 */
+    .admin-panel {
+      background: linear-gradient(135deg, rgba(139,0,0,0.9), rgba(100,0,0,0.95));
+      border: 3px solid var(--gold);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5), inset 0 0 30px rgba(255,215,0,0.1);
+    }
+    
+    .admin-panel h2 {
+      text-align: center;
+      color: var(--gold);
+      font-size: 1.5em;
+      margin-bottom: 16px;
+      text-shadow: 0 0 10px rgba(212,175,55,0.5);
+    }
+    
+    .admin-panel input {
+      width: 100%;
+      padding: 12px 16px;
+      margin: 8px 0;
+      border: 2px solid var(--gold);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      font-size: 16px;
+    }
+    
+    .admin-panel input::placeholder { color: rgba(255,255,255,0.6); }
+    
+    .admin-panel .row {
+      display: flex;
+      gap: 12px;
+      margin: 8px 0;
+    }
+    
+    .admin-panel .row input { flex: 1; }
+    
+    .admin-panel .form-group {
+      margin: 16px 0;
+    }
+    
+    .admin-panel .form-label {
+      display: block;
+      color: var(--gold);
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+    
+    .admin-panel .form-hint {
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+      margin-top: 4px;
+    }
+    
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 14px 24px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: bold;
+    }
+    
+    .btn-gold {
+      background: linear-gradient(180deg, #f0d060, #c9a227);
+      color: #5c3d1e;
+      box-shadow: 0 4px 15px rgba(212,175,55,0.4);
+    }
+    
+    .btn-gold:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(212,175,55,0.6);
+    }
+    
+    .btn-red {
+      background: linear-gradient(180deg, #dc143c, #8b0000);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(220,20,60,0.4);
+    }
+    
+    .btn-red:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(220,20,60,0.6);
+    }
+    
+    /* 音乐 */
+    .music-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding: 12px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 12px;
+      border: 1px solid rgba(255,215,0,0.3);
+    }
+    
+    .music-bar button {
+      padding: 10px 20px;
+      background: var(--gold);
+      color: #5c3d1e;
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 14px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    
+    /* 福装饰 */
+    .header {
+      text-align: center;
+      padding: 20px 0;
+      position: relative;
+    }
+    
+    .header h1 {
+      font-size: 2em;
+      color: var(--gold);
+      text-shadow: 0 0 20px rgba(212,175,55,0.8);
+      margin-bottom: 8px;
+    }
+    
+    .header::before, .header::after {
+      content: '福';
+      font-size: 1.5em;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    
+    .header::before { left: 10px; }
+    .header::after { right: 10px; }
+    
+    .header .subtitle {
+      font-size: 1.1em;
+      color: rgba(255,255,255,0.9);
+    }
+    
+    /* 福装饰 */
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    
+    .stat-box {
+      background: linear-gradient(135deg, rgba(220,20,60,0.4), rgba(139,0,0,0.6));
+      border: 2px solid var(--gold);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    
+    .stat-box .label {
+      font-size: 0.9em;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 4px;
+    }
+    
+    .stat-box .value {
+      font-size: 1.5em;
+      color: var(--gold);
+      font-weight: bold;
+    }
+    
+    /* 红包网格 */
+    .packets-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 20px 0;
+      padding: 16px 0;
+    }
+    
+    .packet {
+      aspect-ratio: 1;
+      background: 
+        linear-gradient(105deg, transparent 40%, rgba(255,215,0,0.15) 40%, rgba(255,215,0,0.15) 42%, transparent 42%),
+        linear-gradient(75deg, transparent 40%, rgba(255,215,0,0.12) 40%, rgba(255,215,0,0.12) 42%, transparent 42%),
+        linear-gradient(-75deg, transparent 45%, rgba(255,215,0,0.1) 45%, rgba(255,215,0,0.1) 47%, transparent 47%),
+        linear-gradient(-105deg, transparent 45%, rgba(255,215,0,0.08) 45%, rgba(255,215,0,0.08) 47%, transparent 47%),
+        linear-gradient(180deg, rgba(255,215,0,0.25) 0%, transparent 15%),
+        linear-gradient(145deg, #dc143c, #8b0000);
+      border: 3px solid var(--gold);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4), inset 0 0 20px rgba(255,215,0,0.1);
+    }
+    
+    .packet::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 28%;
+      background: linear-gradient(180deg, rgba(255,215,0,0.4) 0%, rgba(255,215,0,0.1) 50%, transparent 100%);
+      border-radius: 12px 12px 0 0;
+    }
+    
+    .packet::after {
+      content: '';
+      position: absolute;
+      top: 4px; left: 4px; right: 4px; bottom: 4px;
+      border: 1px solid rgba(255,215,0,0.35);
+      border-radius: 10px;
+      pointer-events: none;
+    }
+    
+    .packet:hover:not(.opened) {
+      transform: scale(1.05);
+      box-shadow: 0 8px 25px rgba(212,175,55,0.5);
+    }
+    
+    .packet.opened {
+      cursor: default;
+      pointer-events: none;
+      opacity: 0.9;
+    }
+    
+    .packet .icon {
+      font-size: 2em;
+      margin-bottom: 4px;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+    }
+    
+    .packet .amount {
+      font-size: 1.3em;
+      font-weight: bold;
+      color: var(--gold);
+      text-shadow: 0 0 5px rgba(212,175,55,0.8);
+    }
+    
+    .packet .blessing-word {
+      font-size: 1.4em;
+      color: var(--gold);
+      font-weight: bold;
+      margin-bottom: 2px;
+      text-shadow: 0 0 6px rgba(255,215,0,0.8);
+    }
+    .packet .blessing {
+      font-size: 1em;
+      padding: 0 4px;
+      text-align: center;
+      color: rgba(255,255,255,0.95);
+    }
+    
+    .packet .packet-cover-icon {
+      width: 24px;
+      height: 24px;
+      background: radial-gradient(circle, rgba(255,215,0,0.6) 20%, rgba(255,215,0,0.2) 50%, transparent 70%);
+      border-radius: 50%;
+    }
+    
+    .packet .icon-mine { font-size: 2.2em; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6)); }
+    .packet .icon-firework { font-size: 2.2em; filter: drop-shadow(0 0 8px rgba(255,200,50,0.8)); animation: icon-pulse 1.5s ease-in-out infinite alternate; }
+    .packet .icon-surprise { font-size: 2.2em; filter: drop-shadow(0 0 8px rgba(255,215,0,0.8)); animation: icon-pulse 1.5s ease-in-out infinite alternate; }
+    @keyframes icon-pulse { from { transform: scale(1); } to { transform: scale(1.1); } }
+    
+    /* 福装饰 */
+    .packet.mine-revealed .icon { content: '💣'; }
+    
+    /* 地雷样式 */
+    .next-round-btn {
+      margin-top: 20px;
+    }
+    
+    /* 弹窗 */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s;
+    }
+    
+    .modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .modal {
+      background: linear-gradient(135deg, #8b0000, #5c0000);
+      border: 4px solid var(--gold);
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 90%;
+      text-align: center;
+      transform: scale(0.8);
+      transition: transform 0.3s;
+      box-shadow: 0 0 50px rgba(212,175,55,0.3);
+    }
+    
+    .modal-overlay.show .modal {
+      transform: scale(1);
+    }
+    
+    .modal.special-msg .modal-text {
+      font-size: 1.2em;
+      color: var(--gold);
+      font-weight: bold;
+      text-shadow: 0 0 15px rgba(212,175,55,0.8);
+      line-height: 1.5;
+    }
+    
+    .modal.sad .modal-text {
+      font-family: 'Ma Shan Zheng', cursive;
+      font-size: 1.8em;
+      color: #ccc;
+      font-style: italic;
+      text-shadow: 0 0 10px rgba(100,100,100,0.5);
+    }
+    
+    .modal.happy .modal-text {
+      font-size: 1.4em;
+      color: var(--gold);
+      font-weight: bold;
+      text-shadow: 0 0 15px rgba(212,175,55,0.8);
+    }
+    
+    .modal-amount {
+      font-size: 2em;
+      color: var(--gold);
+      margin-top: 12px;
+      text-shadow: 0 0 20px rgba(212,175,55,0.8);
+    }
+    
+    /* 礼花Canvas */
+    #fireworkCanvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 500;
+    }
+    
+    /* 礼花Canvas */
+    #explosionCanvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 500;
+    }
+    
+    .hidden { display: none !important; }
+    
+    /* 爆炸Canvas */
+    .toast-tip {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      background: linear-gradient(135deg, rgba(255,200,50,0.95), rgba(255,150,0,0.95));
+      color: #5c3d1e;
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      z-index: 1200;
+      box-shadow: 0 6px 24px rgba(255,200,0,0.5);
+      border: 2px solid rgba(255,255,255,0.5);
+      opacity: 0;
+      transition: all 0.3s ease;
+      max-width: 90%;
+      text-align: center;
+    }
+    
+    .toast-tip.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    
+    /* ??????? */
+    .admin-btn {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      border: 2px solid var(--gold);
+      background: linear-gradient(135deg, rgba(139,0,0,0.9), rgba(100,0,0,0.95));
+      color: var(--gold);
+      font-size: 20px;
+      cursor: pointer;
+      z-index: 100;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+      transition: all 0.3s;
+    }
+    
+    .admin-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(212,175,55,0.5);
+    }
+    
+    /* 礼花样式 */
+    .admin-modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1100;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s;
+    }
+    
+    .admin-modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .admin-modal {
+      background: linear-gradient(135deg, rgba(139,0,0,0.95), rgba(100,0,0,0.98));
+      border: 3px solid var(--gold);
+      border-radius: 20px;
+      padding: 28px;
+      max-width: 400px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    
+    /* ???? */
+    .start-screen {
+      text-align: center;
+      padding: 40px 20px;
+    }
+    
+    .start-screen .header { margin-bottom: 40px; }
+    
+    .start-screen .btn-start {
+      font-size: 1.5em;
+      padding: 20px 48px;
+      margin: 0 auto;
+      max-width: 280px;
+    }
+    
+    @media (max-width: 400px) {
+      .packets-grid { gap: 8px; }
+      .header h1 { font-size: 1.6em; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="fireworkCanvas"></canvas>
+  <canvas id="explosionCanvas"></canvas>
+  
+  <!-- 管理员 -->
+  <button class="admin-btn" id="adminBtn" title="管理员">管</button>
+  
+  <div class="container">
+    <!-- 音乐栏 -->
+    <div class="music-bar">
+      <button id="musicToggle">开 音乐</button>
+    </div>
+    
+    <!-- 设置弹窗 -->
+    <div class="admin-modal-overlay" id="adminModal">
+      <div class="admin-modal admin-panel">
+        <h2>管理员面板</h2>
+        <input type="password" id="adminPwd" placeholder="请输入管理员密码" maxlength="10">
+        <div id="adminSettings" class="hidden">
+          <div class="form-group">
+            <label class="form-label" for="packetCount">红包个数</label>
+            <input type="number" id="packetCount" placeholder="如20" min="6" value="20">
+            <div class="form-hint">6-50个，包含1雷+2礼花+2祝福</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="totalAmount">预计总金额（元）</label>
+            <input type="number" id="totalAmount" placeholder="如200" min="1" value="200" step="0.01">
+            <div class="form-hint">每局金额 = 总金额 / 局数</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="roundCount">局数</label>
+            <input type="number" id="roundCount" placeholder="如10" min="1" value="10">
+            <div class="form-hint">总局数 = 局数 × 每局</div>
+          </div>
+          <button class="btn btn-gold" id="startGameFromModal">开始游戏</button>
+          <button class="btn btn-red" id="closeAdminModal" style="margin-top:8px">关闭</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 开始屏 -->
+    <div id="startScreen" class="start-screen">
+      <div class="header">
+        <h1>马年红包扫雷</h1>
+        <p class="subtitle">点击开始，好运连连</p>
+      </div>
+      <button class="btn btn-gold btn-start" id="startGame">开始游戏</button>
+      <p style="margin-top:16px;color:rgba(255,255,255,0.6);font-size:14px">点击下方按钮开始游戏</p>
+    </div>
+    
+    <!-- 游戏区 -->
+    <div id="gameArea" class="hidden">
+      <div class="header">
+        <h1>马年红包扫雷</h1>
+        <p class="subtitle">点击红包，好运连连</p>
+      </div>
+      
+      <div class="stats">
+        <div class="stat-box">
+          <div class="label">当前局获得</div>
+          <div class="value" id="currentAmount">¥0.00</div>
+        </div>
+        <div class="stat-box">
+          <div class="label">累计总金额</div>
+          <div class="value" id="totalEarned">¥0.00</div>
+        </div>
+      </div>
+      
+      <div class="stats">
+        <div class="stat-box">
+          <div class="label">当前局</div>
+          <div class="value" id="currentRound">1</div>
+        </div>
+        <div class="stat-box">
+          <div class="label">剩余红包</div>
+          <div class="value" id="remainingCount">0</div>
+        </div>
+      </div>
+      
+      <div class="packets-grid" id="packetsGrid"></div>
+      
+      <button class="btn btn-red next-round-btn" id="nextRoundBtn">进入下一局</button>
+    </div>
+  </div>
+
+  <script>
+    const ADMIN_PWD = '123';
+    let packets = [];
+    let currentRoundAmount = 0;
+    let totalEarnedAmount = 0;
+    let currentRound = 1;
+    let maxRounds = 3;
+    let roundAmount = 0;
+    let remainingPackets = 0;
+    let gameStarted = false;
+    let consecutiveSafeCount = 0;
+    
+    const adminBtn = document.getElementById('adminBtn');
+    const adminModal = document.getElementById('adminModal');
+    const adminPwd = document.getElementById('adminPwd');
+    const adminSettings = document.getElementById('adminSettings');
+    const startScreen = document.getElementById('startScreen');
+    const gameArea = document.getElementById('gameArea');
+    const packetsGrid = document.getElementById('packetsGrid');
+    const startGameBtn = document.getElementById('startGame');
+    const nextRoundBtn = document.getElementById('nextRoundBtn');
+    
+    // 背景音乐配置
+    const musicSrc = '斗地主.mp3';
+    const audio = new Audio();
+    audio.volume = 0.4;
+    audio.loop = true;
+    let musicEnabled = true;
+    
+    
+    document.getElementById('musicToggle').addEventListener('click', () => {
+      musicEnabled = !musicEnabled;
+      if (musicEnabled) {
+        audio.src = musicSrc;
+        audio.play().catch(() => {});
+        document.getElementById('musicToggle').textContent = '开 音乐';
+      } else {
+        audio.pause();
+        document.getElementById('musicToggle').textContent = '关 音乐';
+      }
+    });
+    
+    // 音乐自动播放
+    function tryAutoPlay() {
+      if (!musicEnabled) return;
+      audio.src = musicSrc;
+      const playWhenReady = () => {
+        audio.play().catch(() => {});
+        audio.removeEventListener('canplaythrough', playWhenReady);
+      };
+      audio.addEventListener('canplaythrough', playWhenReady);
+      if (audio.readyState >= 3) playWhenReady();
+      else audio.load();
+    }
+    tryAutoPlay();
+    document.addEventListener('click', function unlockAudio() {
+      if (musicEnabled && audio.paused) tryAutoPlay();
+      document.removeEventListener('click', unlockAudio);
+    }, { once: true });
+    
+    adminBtn.addEventListener('click', () => {
+      adminModal.classList.add('show');
+      adminPwd.value = '';
+      adminSettings.classList.add('hidden');
+    });
+    
+    adminModal.addEventListener('click', (e) => {
+      if (e.target === adminModal) adminModal.classList.remove('show');
+    });
+    
+    document.getElementById('closeAdminModal').addEventListener('click', () => {
+      adminModal.classList.remove('show');
+    });
+    
+    adminPwd.addEventListener('input', () => {
+      if (adminPwd.value === ADMIN_PWD) {
+        adminSettings.classList.remove('hidden');
+      } else {
+        adminSettings.classList.add('hidden');
+      }
+    });
+    
+    function startNewGame() {
+      const n = parseInt(document.getElementById('packetCount').value) || 20;
+      const x = parseFloat(document.getElementById('totalAmount').value) || 200;
+      const y = parseInt(document.getElementById('roundCount').value) || 10;
+      
+      if (n < 6) {
+        alert('红包个数至少6个');
+        return;
+      }
+      
+      maxRounds = y;
+      currentRound = 1;
+      totalEarnedAmount = 0;
+      roundAmount = x / y;
+      
+      startScreen.classList.add('hidden');
+      gameArea.classList.remove('hidden');
+      adminModal.classList.remove('show');
+      gameStarted = true;
+      
+      initRound();
+    }
+    
+    function initRound() {
+      const n = parseInt(document.getElementById('packetCount').value) || 20;
+      packets = [];
+      currentRoundAmount = 0;
+      consecutiveSafeCount = 0;
+      
+      const moneyCount = n - 5;
+      const moneyTotal = roundAmount;
+      const amounts = distributeRandom(moneyTotal, moneyCount);
+      let amountIdx = 0;
+      
+      const specialTypes = ['mine', 'firework', 'firework_special', 'blessing_health', 'blessing_fortune'];
+      const types = [];
+      for (let i = 0; i < moneyCount; i++) types.push('money');
+      for (let i = 0; i < 5; i++) types.push(specialTypes[i]);
+      shuffleArray(types);
+      
+      const BLESSING_CHARS = '新年快乐恭喜发财龙马精神万事如意身体健康';
+      const pickBlessingChar = () => BLESSING_CHARS[Math.floor(Math.random() * BLESSING_CHARS.length)];
+      for (let i = 0; i < n; i++) {
+        if (types[i] === 'money') {
+          packets.push({ type: 'money', amount: amounts[amountIdx++], blessingChar: pickBlessingChar(), opened: false });
+        } else if (types[i] === 'mine') {
+          packets.push({ type: 'mine', amount: 0, opened: false });
+        } else if (types[i] === 'firework') {
+          packets.push({ type: 'firework', amount: 0, opened: false });
+        } else if (types[i] === 'firework_special') {
+          packets.push({ type: 'firework_special', amount: 0, opened: false });
+        } else if (types[i] === 'blessing_health') {
+          packets.push({ type: 'blessing_health', text: '马年健康，龙马精神', blessingChar: pickBlessingChar(), opened: false });
+        } else {
+          packets.push({ type: 'blessing_fortune', text: '马年发财，财源滚滚', blessingChar: pickBlessingChar(), opened: false });
+        }
+      }
+      
+      shuffleArray(packets);
+      remainingPackets = packets.length;
+      
+      renderPackets();
+      updateStats();
+      nextRoundBtn.disabled = false;
+    }
+    
+    function distributeRandom(total, count) {
+      const result = [];
+      let rest = total;
+      for (let i = 0; i < count - 1; i++) {
+        const max = rest - (count - i - 1) * 0.01;
+        const val = (Math.random() * (max - 0.01) + 0.01);
+        result.push(Math.round(val * 100) / 100);
+        rest -= result[result.length - 1];
+      }
+      result.push(Math.round(rest * 100) / 100);
+      return result;
+    }
+    
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    }
+    
+    function renderPackets() {
+      packetsGrid.innerHTML = '';
+      packets.forEach((p, i) => {
+        const div = document.createElement('div');
+        div.className = 'packet' + (p.opened ? ' opened' : '');
+        div.dataset.index = i;
+        
+        if (p.opened) {
+          if (p.type === 'money') {
+            div.innerHTML = `<span class="blessing-word">${p.blessingChar || pickBlessingChar()}</span><span class="amount">¥${p.amount.toFixed(2)}</span>`;
+          } else if (p.type === 'blessing_health' || p.type === 'blessing_fortune') {
+            div.innerHTML = `<span class="blessing-word">${p.blessingChar || pickBlessingChar()}</span><span class="blessing">${p.text}</span>`;
+          } else if (p.type === 'mine') {
+            div.innerHTML = `<span class="icon icon-mine">💣</span>`;
+          } else if (p.type === 'firework') {
+            div.innerHTML = `<span class="icon icon-firework">🎆</span>`;
+          } else if (p.type === 'firework_special') {
+            div.innerHTML = `<span class="icon icon-surprise">🎁</span>`;
+          }
+        } else {
+          div.innerHTML = `<span class="icon packet-cover-icon"></span>`;
+          div.addEventListener('click', () => openPacket(i));
+        }
+        
+        packetsGrid.appendChild(div);
+      });
+    }
+    
+    function showSafeTip() {
+      const toast = document.createElement('div');
+      toast.className = 'toast-tip';
+      toast.textContent = '亲，见好就收哦，小心踩雷';
+      document.body.appendChild(toast);
+      setTimeout(() => toast.classList.add('show'), 10);
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+      }, 2500);
+    }
+    
+    function openPacket(index) {
+      const p = packets[index];
+      if (p.opened) return;
+      
+      p.opened = true;
+      remainingPackets--;
+      
+      if (p.type === 'money') {
+        consecutiveSafeCount++;
+        if (consecutiveSafeCount >= 5) {
+          showSafeTip();
+          consecutiveSafeCount = 0;
+        }
+        currentRoundAmount += p.amount;
+        updateStats();
+        renderPackets();
+      } else if (p.type === 'mine') {
+        consecutiveSafeCount = 0;
+        showMineEffect(index);
+      } else if (p.type === 'firework') {
+        consecutiveSafeCount = 0;
+        showFireworkEffect(index);
+      } else if (p.type === 'firework_special') {
+        consecutiveSafeCount++;
+        if (consecutiveSafeCount >= 5) {
+          showSafeTip();
+          consecutiveSafeCount = 0;
+        }
+        showSpecialMessageModal(index);
+      } else {
+        consecutiveSafeCount++;
+        if (consecutiveSafeCount >= 5) {
+          showSafeTip();
+          consecutiveSafeCount = 0;
+        }
+        renderPackets();
+        updateStats();
+      }
+    }
+    
+    function showMineEffect(index) {
+      const el = packetsGrid.children[index];
+      el.innerHTML = `<span class="icon icon-mine">💣</span>`;
+      el.classList.add('opened');
+      
+      setTimeout(() => {
+        playExplosion(() => {
+          currentRoundAmount = 0;
+          showMineFailedModal();
+        });
+      }, 800);
+    }
+    
+    function showFireworkEffect(index) {
+      const el = packetsGrid.children[index];
+      el.innerHTML = `<span class="icon icon-firework">🎆</span>`;
+      el.classList.add('opened');
+      
+      const unopenedTotal = packets.filter((p, i) => !p.opened && p.type === 'money').reduce((s, p) => s + p.amount, 0);
+      const allRound = currentRoundAmount + unopenedTotal;
+      
+      currentRoundAmount = allRound;
+      packets.forEach(p => { if (p.type === 'money') p.opened = true; });
+      
+      playFirework(() => {
+        const totalAfter = totalEarnedAmount + allRound;
+        showFireworkSuccessModal(allRound, totalAfter);
+      });
+    }
+    
+    function playExplosion(callback) {
+      const canvas = document.getElementById('explosionCanvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      
+      const particles = [];
+      for (let i = 0; i < 80; i++) {
+        particles.push({
+          x: canvas.width / 2,
+          y: canvas.height / 2,
+          vx: (Math.random() - 0.5) * 20,
+          vy: (Math.random() - 0.5) * 20,
+          life: 1,
+          color: Math.random() > 0.5 ? '#ff6b00' : '#ffd700'
+        });
+      }
+      
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        let allDead = true;
+        particles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.life -= 0.025;
+          if (p.life > 0) {
+            allDead = false;
+            ctx.globalAlpha = p.life;
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+          }
+        });
+        
+        if (!allDead) {
+          requestAnimationFrame(animate);
+        } else {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          if (callback) callback();
+        }
+      }
+      animate();
+    }
+    
+    function playFirework(callback) {
+      const canvas = document.getElementById('fireworkCanvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      canvas.style.pointerEvents = 'none';
+      
+      const w = canvas.width, h = canvas.height;
+      const minDim = Math.min(w, h);
+      const goldenColors = ['#fff8e0', '#ffeb99', '#ffd700', '#ffb300', '#ff8c00', '#ff6600', '#ff4500'];
+      const allSparks = [];
+      const burstFlashes = [];
+      const startTime = Date.now();
+      
+      function createBurst(x, y, scale, isBig) {
+        const baseSpeed = minDim * 0.045 * scale;
+        const count = isBig ? (100 + Math.floor(Math.random() * 150)) : (40 + Math.floor(Math.random() * 60));
+        burstFlashes.push({ x, y, r: minDim * 0.1 * scale, life: 1 });
+        for (let i = 0; i < count; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const speed = baseSpeed * (0.6 + Math.random() * 1.1);
+          allSparks.push({
+            x: x, y: y, lastX: x, lastY: y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed - baseSpeed * 0.15,
+            life: 1,
+            size: (isBig ? 5 : 3) + Math.random() * (isBig ? 5 : 3),
+            trailLen: 3 + Math.random() * 5,
+            color: goldenColors[Math.floor(Math.random() * goldenColors.length)]
+          });
+        }
+      }
+      
+      const burstSchedule = [
+        [0, 0.2, 0.3, true], [60, 0.8, 0.25, true], [120, 0.35, 0.5, true],
+        [180, 0.6, 0.2, true], [250, 0.5, 0.4, true], [310, 0.1, 0.38, true],
+        [380, 0.75, 0.45, true], [440, 0.4, 0.28, true], [500, 0.88, 0.35, true],
+        [560, 0.25, 0.55, true], [620, 0.65, 0.22, true], [680, 0.15, 0.48, true],
+        [740, 0.55, 0.52, true], [800, 0.9, 0.4, true], [860, 0.3, 0.32, true],
+        [50, 0.45, 0.25, false], [200, 0.2, 0.45, false], [350, 0.7, 0.38, false],
+        [480, 0.12, 0.5, false], [580, 0.58, 0.3, false], [720, 0.38, 0.42, false]
+      ];
+      
+      burstSchedule.forEach(([delay, xp, yp, isBig]) => {
+        setTimeout(() => {
+          const x = w * (0.1 + xp * 0.8);
+          const y = h * (0.12 + yp * 0.55);
+          createBurst(x, y, isBig ? 1 : 0.6, isBig);
+        }, delay);
+      });
+      
+      setTimeout(() => {
+        if (callback) callback();
+      }, 1500);
+      
+      function animate() {
+        ctx.clearRect(0, 0, w, h);
+        for (let j = burstFlashes.length - 1; j >= 0; j--) {
+          const f = burstFlashes[j];
+          f.life -= 0.15;
+          if (f.life > 0) {
+            const g = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.r);
+            g.addColorStop(0, `rgba(255,255,220,${f.life})`);
+            g.addColorStop(0.5, `rgba(255,200,80,${f.life * 0.5})`);
+            g.addColorStop(1, 'rgba(255,100,0,0)');
+            ctx.fillStyle = g;
+            ctx.fillRect(f.x - f.r - 30, f.y - f.r - 30, (f.r + 30) * 2, (f.r + 30) * 2);
+          } else {
+            burstFlashes.splice(j, 1);
+          }
+        }
+        let hasActive = false;
+        for (let i = allSparks.length - 1; i >= 0; i--) {
+          const s = allSparks[i];
+          s.lastX = s.x;
+          s.lastY = s.y;
+          s.x += s.vx;
+          s.y += s.vy;
+          s.vy += 0.08;
+          s.vx *= 0.992;
+          s.life -= 0.005;
+          if (s.life > 0) {
+            hasActive = true;
+            const dx = s.x - s.lastX, dy = s.y - s.lastY;
+            const len = Math.sqrt(dx * dx + dy * dy) || 1;
+            const dist = Math.min(len * s.trailLen, 70);
+            const tx = s.x - (dx / len) * dist;
+            const ty = s.y - (dy / len) * dist;
+            const rgb = s.color.slice(1).match(/.{2}/g).map(x => parseInt(x, 16));
+            const grad = ctx.createLinearGradient(tx, ty, s.x, s.y);
+            grad.addColorStop(0, `rgba(${rgb[0]},${rgb[1]},${rgb[2]},0)`);
+            grad.addColorStop(0.6, `rgba(${rgb[0]},${rgb[1]},${rgb[2]},0.4)`);
+            grad.addColorStop(1, `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${s.life})`);
+            ctx.strokeStyle = grad;
+            ctx.lineWidth = s.size;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(tx, ty);
+            ctx.lineTo(s.x, s.y);
+            ctx.stroke();
+            ctx.fillStyle = s.color;
+            ctx.shadowColor = s.color;
+            ctx.shadowBlur = 10;
+            ctx.globalAlpha = s.life;
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, s.size * 0.85, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+            ctx.globalAlpha = 1;
+          } else {
+            allSparks.splice(i, 1);
+          }
+        }
+        const elapsed = Date.now() - startTime;
+        if ((hasActive || allSparks.length > 0 || burstFlashes.length > 0) || elapsed < 4500) {
+          requestAnimationFrame(animate);
+        } else {
+          ctx.clearRect(0, 0, w, h);
+        }
+      }
+      
+      requestAnimationFrame(animate);
+    }
+    
+    function showSpecialMessageModal(index) {
+      const el = packetsGrid.children[index];
+      el.innerHTML = `<span class="icon icon-surprise">🎁</span>`;
+      el.classList.add('opened');
+      
+      const overlay = document.createElement('div');
+      overlay.className = 'modal-overlay show';
+      overlay.innerHTML = `
+        <div class="modal happy special-msg">
+          <div class="modal-text">曹雨昕是世界上最美丽的女孩！</div>
+          <div class="modal-text" style="margin-top:12px;font-size:1.1em">新的一年你会变得更漂亮！</div>
+          <div class="modal-text" style="margin-top:8px;font-size:1.1em">你的光芒闪瞎我的眼！</div>
+          <button class="btn btn-gold modal-confirm" style="margin-top:24px">知道了</button>
+        </div>
+      `;
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) overlay.remove();
+      });
+      overlay.querySelector('.modal-confirm').addEventListener('click', () => overlay.remove());
+      document.body.appendChild(overlay);
+      
+      updateStats();
+      renderPackets();
+    }
+    
+    function showMineFailedModal() {
+      const overlay = document.createElement('div');
+      overlay.className = 'modal-overlay show';
+      overlay.innerHTML = `
+        <div class="modal sad">
+          <div class="modal-text">到手的红包清空了</div>
+          <button class="btn btn-gold modal-confirm" style="margin-top:20px">确定</button>
+        </div>
+      `;
+      
+      let closed = false;
+      const doClose = () => {
+        if (closed) return;
+        closed = true;
+        overlay.remove();
+        nextRound();
+      };
+      
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) doClose();
+      });
+      overlay.querySelector('.modal-confirm').addEventListener('click', doClose);
+      document.body.appendChild(overlay);
+      
+      updateStats();
+      renderPackets();
+      
+      setTimeout(doClose, 3000);
+    }
+    
+    function showFireworkSuccessModal(roundAmount, totalAfter) {
+      const overlay = document.createElement('div');
+      overlay.className = 'modal-overlay show';
+      overlay.innerHTML = `
+        <div class="modal happy">
+          <div class="modal-text">恭喜获得本局所有红包 ¥${roundAmount.toFixed(2)} 元</div>
+          <div class="modal-amount" style="font-size:1.2em;margin-top:8px">累计总额 ¥${totalAfter.toFixed(2)}</div>
+          <button class="btn btn-gold modal-confirm" style="margin-top:20px">确定</button>
+        </div>
+      `;
+      
+      let closed = false;
+      const doClose = () => {
+        if (closed) return;
+        closed = true;
+        overlay.remove();
+        nextRound();
+      };
+      
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) doClose();
+      });
+      overlay.querySelector('.modal-confirm').addEventListener('click', doClose);
+      document.body.appendChild(overlay);
+      
+      updateStats();
+      renderPackets();
+      
+      setTimeout(doClose, 2500);
+    }
+    
+    function showModal(type, text, amount, totalAmount, onClose) {
+      const overlay = document.createElement('div');
+      overlay.className = 'modal-overlay show';
+      const totalHtml = totalAmount !== undefined ? `<div class="modal-amount" style="font-size:1.2em;margin-top:8px">累计总额 ¥${totalAmount.toFixed(2)}</div>` : '';
+      overlay.innerHTML = `
+        <div class="modal ${type}">
+          <div class="modal-text">${text}</div>
+          ${amount !== undefined ? `<div class="modal-amount">获得 ¥${amount.toFixed(2)}</div>` : ''}
+          ${totalHtml}
+          <button class="btn btn-gold modal-confirm" style="margin-top:20px">确定</button>
+        </div>
+      `;
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+          overlay.remove();
+          if (onClose) onClose();
+        }
+      });
+      overlay.querySelector('.modal-confirm').addEventListener('click', () => {
+        overlay.remove();
+        if (onClose) onClose();
+      });
+      document.body.appendChild(overlay);
+      
+      updateStats();
+      renderPackets();
+    }
+    
+    function nextRound() {
+      totalEarnedAmount += currentRoundAmount;
+      
+      if (currentRound >= maxRounds) {
+        gameArea.classList.add('hidden');
+        startScreen.classList.remove('hidden');
+        alert(`游戏结束，累计获得 ¥${totalEarnedAmount.toFixed(2)}`);
+        gameStarted = false;
+        return;
+      }
+      
+      currentRound++;
+      initRound();
+    }
+    
+    nextRoundBtn.addEventListener('click', () => {
+      nextRound();
+    });
+    
+    function updateStats() {
+      document.getElementById('currentAmount').textContent = '¥' + currentRoundAmount.toFixed(2);
+      document.getElementById('totalEarned').textContent = '¥' + (totalEarnedAmount + currentRoundAmount).toFixed(2);
+      document.getElementById('currentRound').textContent = currentRound + '/' + maxRounds;
+      document.getElementById('remainingCount').textContent = packets.filter(p => !p.opened).length;
+    }
+    
+    startGameBtn.addEventListener('click', startNewGame);
+    document.getElementById('startGameFromModal').addEventListener('click', startNewGame);
+  </script>
+</body>
+</html>
